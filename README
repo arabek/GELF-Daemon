@@ -1,0 +1,4 @@
+This is the GELF logging daemon - a Python script that will run a thread for each log file that you wish to forward to a GELF server. See the sample config file for usage - it's fairly straight forward.
+
+Note that this first iteration of the script still lacks dynamic config reloading, and tail threads may die and not come back if the file being watch is removed completely, rather than simply truncated.
+

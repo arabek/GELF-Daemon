@@ -7,6 +7,7 @@ import json
 import os
 import Queue
 import re
+import socket
 import sys
 import syslog
 import threading
@@ -15,7 +16,6 @@ import traceback
 import zlib
 from os import stat
 from stat import ST_SIZE
-from socket import *
 
 configFile = '/etc/gelfDaemon.conf'
 

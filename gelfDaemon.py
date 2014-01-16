@@ -135,6 +135,7 @@ class LogThread(threading.Thread):
                     if match:
                         message = {}
                         message['version'] = '1.0'
+                        message['source'] = socket.gethostname()
                         short = re.search(self.shortMessageRegEx, line)
                         if short:
                             message['short_message'] = short.group()
@@ -143,7 +144,7 @@ class LogThread(threading.Thread):
                         message['full_message'] = line
                         message['facility'] = self.facility
                         message['level'] = self.logLevel
-                        message['host'] = os.getenv('HOSTNAME')
+                        message['host'] = socket.gethostname()
                         message['file'] = self.logPath
                         print json.dumps(message)
                         client.log(json.dumps(message))

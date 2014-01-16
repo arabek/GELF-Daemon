@@ -27,7 +27,7 @@ class Client:
         self.maxChunkSize = config.getint('default', 'gelfMaxChunkSize')
 
     def log(self, message):
-        UDPSock = socket(AF_INET,SOCK_DGRAM)
+        UDPSock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         zmessage = zlib.compress(message)
         UDPSock.sendto(zmessage,(self.graylog2_server,self.graylog2_port))
         UDPSock.close()

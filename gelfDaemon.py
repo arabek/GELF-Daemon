@@ -145,8 +145,8 @@ class LogThread(threading.Thread):
                         message['level'] = self.logLevel
                         message['host'] = os.getenv('HOSTNAME')
                         message['file'] = self.logPath
-                        print json.write(message)
-                        client.log(json.write(message))
+                        print json.dumps(message)
+                        client.log(json.dumps(message))
     
 
 if __name__ == '__main__':

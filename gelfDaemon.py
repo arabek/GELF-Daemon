@@ -14,10 +14,10 @@ import threading
 import time
 import traceback
 import zlib
+import getopt
 from os import stat
 from stat import ST_SIZE
 
-configFile = '/etc/gelfDaemon.conf'
 
 # This is the class that sends log messages to the GELF server
 class Client:
@@ -39,7 +39,7 @@ class Concatenate:
         self.results = ''
         # This is a default regex. Please override this.
         self.regEx = '^\ \~$'
-        
+
     def Concatenate(self, line):
         # Get rid of those pesky newlines that can straggle on
         line = line.rstrip()
@@ -84,11 +84,11 @@ class LogThread(threading.Thread):
         self.handle.close()
         self.handle = open(self.logPath, 'r')
         self. position = self.handle.tell()
-       
+
     def run(self):
         # The the paths and whatnot from the config file
         self.GetConfig()
-        
+
         # Open our log file for reading
         try:
             self.OpenLog()
@@ -98,10 +98,10 @@ class LogThread(threading.Thread):
             sys.stderr.write('%s: unknown error occurred, thread exiting\n' %
                             sys.argv[0])
             sys.exit()
-        
+
         # Instantiate the Concatenation class
         cat = Concatenate()
-        
+
         # Now for the thread's main loop
         while True:
             # We break if the queue is a non-zero size. This is pretty
@@ -148,9 +148,25 @@ class LogThread(threading.Thread):
                         message['file'] = self.logPath
                         print json.dumps(message)
                         client.log(json.dumps(message))
-    
+
 
 if __name__ == '__main__':
+    try:
+      opts, args = getopt.getopt(sys.argv[1:], "c:v", ["config=", "verbose"])
+    except getopt.GetoptError as err:
+      print str(err)
+      usage()
+      sys.exit(2)
+    configFile = None
+    verbose = False
+    for o, a in opts:
+      if o in ("-v", "--verbose"):
+        verbose = True
+      elif o in ("-c", "--config"):
+        configFile = a
+      else:
+        assert False, "unhandled exception"
+
     # We use a typical RFC 822 (called an .ini file) format
     config = ConfigParser.ConfigParser()
     try:
@@ -186,11 +202,11 @@ if __name__ == '__main__':
 
     # Start our threads up
     for thread in threads:
-    	sectionName = thread.replace('Thread', '')
+        sectionName = thread.replace('Thread', '')
         thread = LogThread()
         thread.section = sectionName
         thread.start()
-    
+
     # Now for our main loop, which really does dick all
     while True:
         try:
@@ -200,4 +216,4 @@ if __name__ == '__main__':
             WorkerQueue.put('0')
             time.sleep(0.2)
             sys.exit(0)
-        
+

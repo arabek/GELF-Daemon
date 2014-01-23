@@ -146,7 +146,8 @@ class LogThread(threading.Thread):
                         message['level'] = self.logLevel
                         message['host'] = socket.gethostname()
                         message['file'] = self.logPath
-                        print json.dumps(message)
+                        if verbose == True:
+                          print json.dumps(message)
                         client.log(json.dumps(message))
 
 

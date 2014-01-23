@@ -198,7 +198,8 @@ if __name__ == '__main__':
     # Create names for logging threads that will be started up
     threads = []
     for section in sections:
-        print ("%s: found config section called %s" % (sys.argv[0], section))
+        if verbose == True:
+          print ("%s: found config section called %s" % (sys.argv[0], section))
         threads.append(section + 'Thread')
 
     # Start our threads up
